@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import { useState } from "react";
-const Button = ({ onClick }) => {
-    return <button onClick={onClick}>next anecdote</button>;
+const Button = ({ onClick, text }) => {
+    return <button onClick={onClick}>{text}</button>;
 };
 const App = () => {
     const anecdotes = [
@@ -15,16 +15,25 @@ const App = () => {
         "Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.",
         "The only way to go fast, is to go well.",
     ];
-
     const [selected, setSelected] = useState(0);
-
-    const handleClick = () => {
+    const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0));
+    const next = () => {
         setSelected(Math.floor(Math.random() * anecdotes.length));
+    };
+
+    const vote = () => {
+        const temp = [...votes];
+        temp[selected] += 1;
+        setVotes(temp);
     };
     return (
         <div>
             {anecdotes[selected]}
-            <Button onClick={handleClick} />
+            <br />
+            has {votes[selected]} votes
+            <br />
+            <Button onClick={next} text="next anecdote" />
+            <Button onClick={vote} text="vote" />
         </div>
     );
 };
