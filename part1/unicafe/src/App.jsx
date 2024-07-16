@@ -4,9 +4,11 @@ import { useState } from "react";
 const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>;
 const StatisticsLine = ({ text, value }) => {
     return (
-        <p>
-            {text} {value} {text === "percentage" ? "%" : ""}
-        </p>
+        <tr>
+            <td>
+                {text} {value} {text === "percentage" ? "%" : ""}
+            </td>
+        </tr>
     );
 };
 const Statistics = ({ good, neutral, bad }) => {
@@ -20,14 +22,16 @@ const Statistics = ({ good, neutral, bad }) => {
     const average = (good - bad) / total;
     const percentage = (good / total) * 100;
     return (
-        <div>
-            <StatisticsLine text="good" value={good} />
-            <StatisticsLine text="neutral" value={neutral} />
-            <StatisticsLine text="bad" value={bad} />
-            <StatisticsLine text="all" value={total} />
-            <StatisticsLine text="average" value={average} />
-            <StatisticsLine text="percentage" value={percentage} />
-        </div>
+        <table>
+            <tbody>
+                <StatisticsLine text="good" value={good} />
+                <StatisticsLine text="neutral" value={neutral} />
+                <StatisticsLine text="bad" value={bad} />
+                <StatisticsLine text="all" value={total} />
+                <StatisticsLine text="average" value={average} />
+                <StatisticsLine text="percentage" value={percentage} />
+            </tbody>
+        </table>
     );
 };
 
