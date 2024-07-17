@@ -2,8 +2,10 @@
 /* eslint-disable react/prop-types */
 const Header = ({ course }) => <h1>{course}</h1>;
 
-const Total = ({ sum }) => <p>Number of exercises {sum}</p>;
-
+const Total = ({ parts }) => {
+    const sum = parts.reduce((s, p) => s + p.exercises, 0);
+    return <p>total of {sum} exercises</p>;
+};
 const Part = ({ part }) => (
     <p>
         {part.name} {part.exercises}
@@ -23,6 +25,7 @@ const Course = ({ course }) => {
         <>
             <Header course={course.name} />
             <Content parts={course.parts} />
+            <Total parts={course.parts} />
         </>
     );
 };
@@ -46,6 +49,11 @@ const App = () => {
                 name: "State of a component",
                 exercises: 14,
                 id: 3,
+            },
+            {
+                name: "New one",
+                exercises: 3,
+                id: 4,
             },
         ],
     };
