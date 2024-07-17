@@ -1,11 +1,9 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import { useState } from "react";
-const Contact = ({ name, number }) => (
-    <p>
-        {name} {number}
-    </p>
-);
+import Form from "./components/Form";
+import ContactDisplay from "./components/ContactDisplay";
+import Filter from "./components/Filter";
 
 const App = () => {
     const [persons, setPersons] = useState([
@@ -57,32 +55,20 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
-            <div>
-                filter shown with{" "}
-                <input onChange={handleFilterChange} value={newFilter} />
-            </div>
+            <Filter
+                handleFilterChange={handleFilterChange}
+                newFilter={newFilter}
+            />
             <h2>Add a new contact</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    name:{" "}
-                    <input
-                        required
-                        onChange={handleNameChange}
-                        value={newName}
-                    />
-                </div>
-                <div>
-                    number:{" "}
-                    <input required onChange={handleNumChange} value={newNum} />
-                </div>
-                <div>
-                    <button type="submit">add</button>
-                </div>
-            </form>
+            <Form
+                handleSubmit={handleSubmit}
+                handleNameChange={handleNameChange}
+                handleNumChange={handleNumChange}
+                newName={newName}
+                newNum={newNum}
+            />
             <h2>Numbers</h2>
-            {peopleToShow.map((p) => (
-                <Contact name={p.name} number={p.number} key={p.name} />
-            ))}
+            <ContactDisplay peopleToShow={peopleToShow} />
         </div>
     );
 };
