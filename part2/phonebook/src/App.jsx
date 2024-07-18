@@ -12,6 +12,7 @@ const App = () => {
     const [newNum, setNewNum] = useState(""); //current value for number input
     const [newFilter, setNewFilter] = useState(""); //current value for filter input
     const [message, setMessage] = useState(null);
+    const [hasError, setHasError] = useState(false);
     useEffect(() => {
         personsService
             .getAll()
@@ -19,15 +20,27 @@ const App = () => {
     }, []);
 
     const changeContact = (id, newPerson) => {
-        personsService.update(id, newPerson).then((updated) => {
-            setPersons(persons.map((p) => (p.id !== id ? p : updated)));
-            setNewName("");
-            setNewNum("");
-            setMessage(`Updated ${updated.name}`);
-            setTimeout(() => {
-                setMessage(null);
-            }, 5000);
-        });
+        personsService
+            .update(id, newPerson)
+            .then((updated) => {
+                setPersons(persons.map((p) => (p.id !== id ? p : updated)));
+                setNewName("");
+                setNewNum("");
+                setMessage(`Updated ${updated.name}`);
+                setHasError(false);
+                setTimeout(() => {
+                    setMessage(null);
+                }, 5000);
+            })
+            .catch(() => {
+                setMessage(
+                    `Information of ${newPerson.name} has already been removed from the server`
+                );
+                setHasError(true);
+                setTimeout(() => {
+                    setMessage(null);
+                }, 5000);
+            });
     };
     const addContact = (newPerson) => {
         personsService.create(newPerson).then((createdPerson) => {
@@ -35,6 +48,7 @@ const App = () => {
             setNewName("");
             setNewNum("");
             setMessage(`Added ${createdPerson.name}`);
+            setHasError(false);
             setTimeout(() => {
                 setMessage(null);
             }, 5000);
@@ -84,11 +98,10 @@ const App = () => {
     let peopleToShow = persons.filter((p) =>
         p.name.toLowerCase().includes(newFilter)
     );
-
     return (
         <div>
             <h2>Phonebook</h2>
-            <Notification message={message} />
+            <Notification message={message} hasError={hasError} />
             <Filter
                 handleFilterChange={handleFilterChange}
                 newFilter={newFilter}
