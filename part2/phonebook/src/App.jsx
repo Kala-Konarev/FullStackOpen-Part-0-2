@@ -47,6 +47,12 @@ const App = () => {
     const handleFilterChange = (e) => {
         setNewFilter(e.target.value);
     };
+    const handleDelete = (id) => {
+        personsService.remove(id).then((removed) => {
+            const filteredPersons = persons.filter((p) => p.id !== removed.id);
+            setPersons(filteredPersons);
+        });
+    };
 
     let peopleToShow = persons.filter((p) =>
         p.name.toLowerCase().includes(newFilter)
@@ -68,7 +74,10 @@ const App = () => {
                 newNum={newNum}
             />
             <h2>Numbers</h2>
-            <ContactDisplay peopleToShow={peopleToShow} />
+            <ContactDisplay
+                peopleToShow={peopleToShow}
+                deleteFunc={handleDelete}
+            />
         </div>
     );
 };

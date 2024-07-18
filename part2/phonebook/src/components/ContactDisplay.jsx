@@ -1,15 +1,21 @@
 /* eslint-disable react/prop-types */
-const Contact = ({ name, number }) => (
+import Button from "./Button";
+const Contact = ({ name, number, deleteFunc }) => (
     <p>
-        {name} {number}
+        {name} {number} <Button onClick={deleteFunc} text="delete" />
     </p>
 );
 
-const ContactDisplay = ({ peopleToShow }) => {
+const ContactDisplay = ({ peopleToShow, deleteFunc }) => {
     return (
         <div>
             {peopleToShow.map((p) => (
-                <Contact name={p.name} number={p.number} key={p.name} />
+                <Contact
+                    name={p.name}
+                    number={p.number}
+                    key={p.name}
+                    deleteFunc={() => deleteFunc(p.id)}
+                />
             ))}
         </div>
     );
