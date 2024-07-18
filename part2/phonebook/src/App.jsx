@@ -1,9 +1,7 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 
 import personsService from "./services/persons";
-
+import Notification from "./components/Notification";
 import Form from "./components/Form";
 import ContactDisplay from "./components/ContactDisplay";
 import Filter from "./components/Filter";
@@ -13,7 +11,7 @@ const App = () => {
     const [newName, setNewName] = useState(""); //current value for name input
     const [newNum, setNewNum] = useState(""); //current value for number input
     const [newFilter, setNewFilter] = useState(""); //current value for filter input
-
+    const [message, setMessage] = useState(null);
     useEffect(() => {
         personsService
             .getAll()
@@ -25,6 +23,10 @@ const App = () => {
             setPersons(persons.map((p) => (p.id !== id ? p : updated)));
             setNewName("");
             setNewNum("");
+            setMessage(`Updated ${updated.name}`);
+            setTimeout(() => {
+                setMessage(null);
+            }, 5000);
         });
     };
     const addContact = (newPerson) => {
@@ -32,6 +34,10 @@ const App = () => {
             setPersons(persons.concat(createdPerson));
             setNewName("");
             setNewNum("");
+            setMessage(`Added ${createdPerson.name}`);
+            setTimeout(() => {
+                setMessage(null);
+            }, 5000);
         });
     };
 
@@ -53,7 +59,6 @@ const App = () => {
             addContact(newPerson);
         }
     };
-
     const handleNameChange = (e) => {
         setNewName(e.target.value);
     };
@@ -83,6 +88,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            <Notification message={message} />
             <Filter
                 handleFilterChange={handleFilterChange}
                 newFilter={newFilter}
