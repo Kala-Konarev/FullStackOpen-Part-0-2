@@ -20,21 +20,37 @@ const App = () => {
             .then((initialPersons) => setPersons(initialPersons));
     }, []);
 
+    const changeContact = (id, newPerson) => {
+        personsService.update(id, newPerson).then((updated) => {
+            setPersons(persons.map((p) => (p.id !== id ? p : updated)));
+            setNewName("");
+            setNewNum("");
+        });
+    };
+    const addContact = (newPerson) => {
+        personsService.create(newPerson).then((createdPerson) => {
+            setPersons(persons.concat(createdPerson));
+            setNewName("");
+            setNewNum("");
+        });
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        const exists = persons.find((p) => p.name === newName);
-        if (exists) {
-            alert(`${newName} is already added to the phonebook`);
+        const newPerson = {
+            name: newName,
+            number: newNum,
+        };
+        const existingPerson = persons.find((p) => p.name === newName);
+        if (existingPerson) {
+            const confirmed = window.confirm(
+                `${newName} is already added to the phonebook, replace the old number with a new one?`
+            );
+            if (confirmed) {
+                changeContact(existingPerson.id, newPerson);
+            }
         } else {
-            const newPerson = {
-                name: newName,
-                number: newNum,
-            };
-            personsService.create(newPerson).then((createdPerson) => {
-                setPersons(persons.concat(createdPerson));
-                setNewName("");
-                setNewNum("");
-            });
+            addContact(newPerson);
         }
     };
 
