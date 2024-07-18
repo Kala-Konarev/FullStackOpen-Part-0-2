@@ -48,10 +48,16 @@ const App = () => {
         setNewFilter(e.target.value);
     };
     const handleDelete = (id) => {
-        personsService.remove(id).then((removed) => {
-            const filteredPersons = persons.filter((p) => p.id !== removed.id);
-            setPersons(filteredPersons);
-        });
+        const personToDelete = persons.find((p) => p.id === id);
+        const confirmed = window.confirm(`Delete ${personToDelete.name}?`);
+        if (confirmed) {
+            personsService.remove(id).then((removed) => {
+                const filteredPersons = persons.filter(
+                    (p) => p.id !== removed.id
+                );
+                setPersons(filteredPersons);
+            });
+        }
     };
 
     let peopleToShow = persons.filter((p) =>
