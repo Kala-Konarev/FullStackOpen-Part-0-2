@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import axios from "axios";
 import { useState, useEffect } from "react";
+
+import personsService from "./services/persons";
 
 import Form from "./components/Form";
 import ContactDisplay from "./components/ContactDisplay";
@@ -14,9 +15,9 @@ const App = () => {
     const [newFilter, setNewFilter] = useState(""); //current value for filter input
 
     useEffect(() => {
-        axios
-            .get("http://localhost:3001/persons")
-            .then((response) => setPersons(response.data));
+        personsService
+            .getAll()
+            .then((initialPersons) => setPersons(initialPersons));
     }, []);
 
     const handleSubmit = (e) => {
@@ -25,13 +26,15 @@ const App = () => {
         if (exists) {
             alert(`${newName} is already added to the phonebook`);
         } else {
-            const newPersons = persons.concat({
+            const newPerson = {
                 name: newName,
                 number: newNum,
+            };
+            personsService.create(newPerson).then((createdPerson) => {
+                setPersons(persons.concat(createdPerson));
+                setNewName("");
+                setNewNum("");
             });
-            setPersons(newPersons);
-            setNewName("");
-            setNewNum("");
         }
     };
 
