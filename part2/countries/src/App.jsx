@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import CountryList from "./components/CountryList";
-import CountryDisplay from "./components/CountryDisplay";
 
 const App = () => {
     const [search, setSearch] = useState("");
@@ -30,24 +29,19 @@ const App = () => {
         setCountriesToShow(filteredCountries);
     };
 
-    if (countriesToShow.length === 1)
-        return (
-            <div>
-                find countries
-                <input value={search} onChange={handleSearch} />
-                <CountryDisplay countryDetails={countriesToShow[0]} />;
-            </div>
-        );
-    else
-        return (
-            <div>
-                find countries
-                <input value={search} onChange={handleSearch} />
-                <CountryList
-                    countries={countriesToShow.map((c) => c.name.common)}
-                />
-            </div>
-        );
+    const showCountry = (country) => () => {
+        setCountriesToShow([country]);
+    };
+    return (
+        <div>
+            find countries
+            <input value={search} onChange={handleSearch} />
+            <CountryList
+                countries={countriesToShow}
+                showCountry={showCountry}
+            />
+        </div>
+    );
 };
 
 export default App;
