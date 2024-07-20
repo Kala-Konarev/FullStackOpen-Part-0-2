@@ -1,11 +1,23 @@
-/* eslint-disable no-unused-vars */
+import { useEffect, useState } from "react";
+import axios from "axios";
+const api_key = import.meta.env.API_KEY;
 const CountryDisplay = ({ countryDetails }) => {
     const name = countryDetails.name.common;
     const capital = countryDetails.capital;
     const area = countryDetails.area;
     const languages = Object.values(countryDetails.languages);
     const flagUrl = countryDetails.flags.png;
-
+    const [weather, setWeather] = useState(null);
+    const getUrl = `https://api.openweathermap.org/data/2.5/weather?q=${capital}&appid=${api_key}`;
+    useEffect(() => {
+        axios
+            .get(getUrl)
+            .then((resp) => resp.data)
+            .then((data) => {
+                setWeather(data);
+                console.log(data);
+            });
+    }, [getUrl]);
     return name ? (
         <div>
             <h1>{name}</h1>
@@ -18,6 +30,16 @@ const CountryDisplay = ({ countryDetails }) => {
                 ))}
             </ul>
             <img src={flagUrl} />
+            <h1>Weather in {capital}</h1>
+            {weather && (
+                <>
+                    <img
+                        src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
+                    />
+                    <p>temperature {weather.main.temp} Celcius</p>
+                    <p>wind {weather.wind.speed} m/s</p>
+                </>
+            )}
         </div>
     ) : null;
 };
