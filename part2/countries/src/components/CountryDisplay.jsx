@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-const api_key = import.meta.env.API_KEY;
 const CountryDisplay = ({ countryDetails }) => {
+    const api_key = import.meta.env.VITE_API_KEY;
     const name = countryDetails.name.common;
     const capital = countryDetails.capital;
     const area = countryDetails.area;
@@ -36,7 +36,10 @@ const CountryDisplay = ({ countryDetails }) => {
                     <img
                         src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
                     />
-                    <p>temperature {weather.main.temp} Celcius</p>
+                    <p>
+                        temperature {(weather.main.temp - 273.15).toFixed(2)}{" "}
+                        Celcius
+                    </p>
                     <p>wind {weather.wind.speed} m/s</p>
                 </>
             )}
