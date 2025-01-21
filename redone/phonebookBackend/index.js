@@ -21,9 +21,16 @@ let persons = [
     },
 ];
 
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: "unknown endpoint" });
+};
+
 const express = require("express");
+const morgan = require("morgan");
+
 const app = express();
 app.use(express.json());
+app.use(morgan("tiny"));
 
 app.get("/info", (req, res) => {
     const date = new Date();
@@ -69,6 +76,9 @@ app.post("/api/persons", (req, res) => {
         res.json(person);
     }
 });
+
+app.use(unknownEndpoint);
+
 const PORT = 3001;
 app.listen(PORT);
 console.log("Server running on port " + PORT);
