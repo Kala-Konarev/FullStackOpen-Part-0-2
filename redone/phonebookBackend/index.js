@@ -25,6 +25,12 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 
+app.get("/info", (req, res) => {
+    const date = new Date();
+    const numOfPpl = persons.length;
+    res.send(`<p>Phonebook has info on ${numOfPpl} people</p><p>${date}</p>`);
+});
+
 app.get("/api/persons", (req, res) => {
     res.json(persons);
 });
