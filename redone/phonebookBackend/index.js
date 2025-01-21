@@ -27,10 +27,27 @@ const unknownEndpoint = (request, response) => {
 
 const express = require("express");
 const morgan = require("morgan");
-
+morgan.token("body", function getBody(req) {
+    return req.body;
+});
 const app = express();
 app.use(express.json());
-app.use(morgan("tiny"));
+app.use(
+    morgan(function (tokens, req, res) {
+        const method = tokens.method(req, res);
+        const result = [
+            method,
+            tokens.url(req, res),
+            tokens.status(req, res),
+            tokens.res(req, res, "content-length"),
+            "-",
+            tokens["response-time"](req, res),
+            "ms",
+        ];
+        if (method === "POST") result.push(JSON.stringify(tokens.body(req)));
+        return result.join(" ");
+    })
+);
 
 app.get("/info", (req, res) => {
     const date = new Date();
@@ -71,7 +88,6 @@ app.post("/api/persons", (req, res) => {
             number: body.number,
         };
         persons = persons.concat(person);
-        console.log(persons);
 
         res.json(person);
     }
