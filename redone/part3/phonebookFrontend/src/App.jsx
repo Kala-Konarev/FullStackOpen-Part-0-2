@@ -34,27 +34,42 @@ const App = () => {
             ) {
                 personService
                     .update(existing.id, { ...existing, number: newNum })
-                    .then((response) =>
+                    .then((response) => {
                         setPersons(
                             persons.map((p) =>
                                 p.id === existing.id ? response : p
                             )
-                        )
-                    );
-                setMessage(
-                    `Person ${newName}'s number has been changed to ${newNum}`
-                );
+                        );
+                        setMessage(
+                            `Person ${newName}'s number has been changed to ${newNum}`
+                        );
+                    })
+                    .catch((error) => {
+                        console.log(error.response.data.error);
+                        setMessage(`Error: ${error.response.data.error}`);
+                        setIsError(true);
+                    });
+
                 setTimeout(() => {
                     setMessage(null);
+                    setIsError(false);
                 }, 5000);
             }
         } else {
             personService
                 .create({ name: newName, number: newNum })
-                .then((response) => setPersons(persons.concat(response)));
-            setMessage(`Person ${newName} has been added to contacts`);
+                .then((response) => {
+                    setPersons(persons.concat(response));
+                    setMessage(`Person ${newName} has been added to contacts`);
+                })
+                .catch((error) => {
+                    console.log(error.response.data.error);
+                    setMessage(`Error: ${error.response.data.error}`);
+                    setIsError(true);
+                });
             setTimeout(() => {
                 setMessage(null);
+                setIsError(false);
             }, 5000);
         }
         setNewName("");
