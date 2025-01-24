@@ -6,9 +6,20 @@ mongoose.connect(url).then((result) => {
     console.log("Connected to ", url);
 });
 
+function numValidator(val) {
+    return /[0-9]{2,3}-[0-9]*/.test(val);
+}
 const personSchema = new mongoose.Schema({
     name: { type: String, minLength: 3, required: true },
-    number: { type: Number, required: true },
+    number: {
+        type: String,
+        validate: {
+            validator: numValidator,
+            message: "Not a valid phone number",
+        },
+        minLength: 8,
+        required: true,
+    },
 });
 
 personSchema.set("toJSON", {
